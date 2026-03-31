@@ -36,30 +36,33 @@ user-invocable: false
 - 도구로 작성한 내용 → 작성된 내용 그대로 저장
 - Claude가 "더 낫게" 재구성하는 것은 금지
 
-## Frontmatter 상태 필드
+## 메타데이터 형식
 
-```yaml
----
-feature: NNN-feature-name
-status: draft          # draft → in-progress → done
-created: YYYY-MM-DD
-current_phase: 1       # tasks.md Phase 기반 자동 계산
-current_step: 0        # tasks.md 완료 태스크 수 기반 자동 계산
-branch: ""             # 현재 작업 브랜치
----
+SpecKit 사용 시 SpecKit이 생성하는 볼드 마크다운 형식을 따른다:
+
+```markdown
+# Feature Specification: {기능명}
+
+**Feature Branch**: `NNN-feature-name`
+**Created**: YYYY-MM-DD
+**Status**: Draft
+**Input**: {요구사항 설명}
 ```
 
-> `current_phase`, `current_step`은 tasks.md의 체크리스트 상태에서 자동 계산.
-> 수동 업데이트 금지 — end-session에서 tasks.md 기반으로 동기화.
+SpecKit 미사용 시(superpowers 폴백) superpowers가 생성하는 형식을 따른다.
+
+> 어떤 형식이든 `Status` 필드는 `Draft → In-Progress → Done`으로 추적.
+> end-session에서 tasks.md 기반으로 동기화.
 
 ## 작성 시점
 
 | 상황 | spec.md | plan.md | tasks.md |
 |------|---------|---------|----------|
-| Standard | brainstorming 후 작성 (도구: rules/03-integration.md) | brainstorming 후 작성 | plan.md 기반 작성 |
-| PRD 수신 | 해당 없음 | PRD 원문 + frontmatter → 즉시 저장 | plan.md 기반 수동 작성 |
+| SpecKit 사용 | /speckit.specify | /speckit.plan | /speckit.tasks |
+| SpecKit 미사용 | brainstorming에서 작성 | superpowers:writing-plans | plan 기반 작성 |
+| PRD 수신 | 해당 없음 | PRD 원문 그대로 저장 | plan 기반 수동 작성 |
 
-저장 완료 후 `status: in-progress`로 변경.
+저장 완료 후 `Status: In-Progress`로 변경.
 
 ---
 

@@ -1,8 +1,10 @@
 {
   "enabledPlugins": {
     "superpowers@claude-plugins-official": true,
-    "plannotator@plannotator": true
+    "plannotator@plannotator": true,
+    "context7@claude-plugins-official": true,
+    "hookify@claude-plugins-official": true
   },
   "language": "korean",
-  "effortLevel": "medium"
+  "effortLevel": "high"
 }

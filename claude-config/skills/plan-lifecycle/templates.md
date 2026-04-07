@@ -1,5 +1,79 @@
 # Document Templates
 
+## plan.md 4-Part 템플릿
+
+```markdown
+---
+feature: NNN-feature-name
+status: Draft
+created: YYYY-MM-DD
+current_phase: 0
+current_step: 0
+branch: ""
+---
+
+# {Feature Name}
+
+## Part 1: Context & Requirements
+
+### 문제 정의
+{Problem Statement}
+
+### 범위
+**In-Scope:**
+- ...
+
+**Out-of-Scope:**
+- ...
+
+### Acceptance Criteria
+
+#### AC-01: {제목}
+- **Given**: {전제 조건}
+- **When**: {동작}
+- **Then**: {기대 결과}
+
+## Part 2: Technical Design
+
+### 영향 파일/모듈
+| 파일 | 변경 유형 | 설명 |
+|------|----------|------|
+| ... | Create/Modify | ... |
+
+### 아키텍처 결정
+{결정 + 근거}
+
+### 검토한 대안
+| 대안 | 장점 | 단점 | 선택 여부 |
+|------|------|------|----------|
+| ... | ... | ... | 선택/기각 |
+
+## Part 3: Tasks
+
+### Phase 1: {Phase 이름}
+- [ ] [T001] {Step 설명} — `{대상 파일}`
+- [ ] [T002] {Step 설명} — `{대상 파일}`
+  - Depends on: T001
+
+### Phase 2: {Phase 이름}
+- [ ] [T003] || {병렬 가능 Step} — `{파일}`
+- [ ] [T004] || {병렬 가능 Step} — `{파일}`
+
+## Part 4: Risks & Verification
+
+### 기술적 위험
+| 위험 | 영향 | 완화 방안 |
+|------|------|----------|
+| ... | ... | ... |
+
+### 검증 기준
+| 검증 항목 | 방법 | 기대 결과 |
+|----------|------|----------|
+| ... | ... | ... |
+```
+
+---
+
 ## session-log.md 형식
 
 ```markdown

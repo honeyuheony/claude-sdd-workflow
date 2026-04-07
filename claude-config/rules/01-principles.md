@@ -24,7 +24,7 @@
 |------|----------|:---------:|
 | Quick | Skip | -- |
 | Standard | brainstorming 후 도출 | 제시 후 진행 |
-| SDD | spec.md AC 대체 | Phase 2 승인 |
+| SDD | Plan Mode Part 1 AC | Plan 승인 시 |
 
 | Bad (주관적) | Good (검증 가능) |
 |-------------|----------------|

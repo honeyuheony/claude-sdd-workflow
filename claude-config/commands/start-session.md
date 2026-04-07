@@ -9,9 +9,9 @@ description: 세션 시작 - 진행 중 작업 확인, 맥락 파악
 ## 0단계: 프로젝트 환경 감지
 
 ```
-.claude/commands/speckit.specify.md 존재 확인
-→ 존재: "SpecKit 사용 가능 — 역할 분담 모드 (03-integration.md)"
-→ 미존재: "기본 모드 — Superpowers 폴백"
+git rev-parse --is-inside-work-tree 2>/dev/null
+→ git repo: "Git 프로젝트 — Plan Mode + Ultraplan 사용 가능"
+→ non-git: "Non-git 환경 — Plan Mode 터미널 리뷰"
 ```
 
 ## 1단계: 진행 중 Plan 탐지
@@ -53,7 +53,7 @@ find {project_root}/specs -name "plan.md" 2>/dev/null
    - 다음 TODO: T005 재개, T006 시작
    ```
 
-2. **tasks.md** — 미완료 태스크([ ]) 추출
+2. **plan.md Part 3** — 미완료 태스크([ ]) 추출
    ```
    미완료 태스크: 12/20 (60% 완료)
    다음 태스크: [T005] 권한 관리 — src/services/auth.py

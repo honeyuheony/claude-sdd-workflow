@@ -18,7 +18,7 @@ description: 세션 종료 - 작업 정리, 평가, 학습 추출
 
 Standard 작업이 있었으면 산출물 상태를 동기화합니다:
 
-### 2A: tasks.md 업데이트
+### 2A: plan.md Part 3 업데이트
 - 완료된 태스크를 `[x]`로 표시
 - 진행률 계산: "{완료}/{전체} tasks ({퍼센트}%)"
 
@@ -42,15 +42,15 @@ Standard 작업이 있었으면 산출물 상태를 동기화합니다:
 ```
 
 ### 2C: plan.md frontmatter 동기화
-tasks.md의 체크리스트 상태를 기반으로 plan.md frontmatter를 자동 계산:
+plan.md Part 3의 체크리스트 상태를 기반으로 frontmatter를 자동 계산:
 - `current_phase`: 현재 진행 중인 Phase 번호 (가장 최근 미완료 Phase)
 - `current_step`: 해당 Phase에서 완료된 태스크 수
 - 모든 태스크 완료 시: `status: done`
 
 ## 3단계: Completion Assessment
 
-### 3A: AC 기반 진행도 (spec.md 있을 때)
-spec.md의 각 AC/User Scenario를 순회하여 판정:
+### 3A: AC 기반 진행도 (plan.md Part 1 AC 있을 때)
+plan.md Part 1의 각 AC/User Scenario를 순회하여 판정:
 
 ```
 AC-01: {설명} — PASS (T003, T004 완료, 테스트 통과)
@@ -59,7 +59,7 @@ AC-03: {설명} — NOT STARTED
 전체: {PASS}/{전체} AC
 ```
 
-### 3B: tasks.md 진행도
+### 3B: plan.md Part 3 진행도
 ```
 완료: {n}/{total} ({percent}%)
 Phase 1: {n}/{m} 완료
@@ -77,11 +77,11 @@ Phase 3: {n}/{m} 미시작
 > **서브에이전트를 사용하지 않는다.** 세션 컨텍스트 자체가 입력이므로
 > 메인 컨텍스트에서 직접 실행 (1M 컨텍스트면 충분).
 
-## 4단계: Final Review (모든 tasks.md 태스크 완료 시에만)
+## 4단계: Final Review (plan.md Part 3 모든 태스크 완료 시에만)
 
 Task의 모든 태스크가 완료되었으면:
 
-1. spec.md AC 전체 pass/fail 판정
+1. plan.md Part 1 AC 전체 pass/fail 판정
 2. 각 항목의 증거(테스트 결과, 빌드 출력) 함께 제시
 3. 전체 PASS → verification-before-completion 진행
 4. 실패 항목 있으면 → 해당 Phase 재실행 제안

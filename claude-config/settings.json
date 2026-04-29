@@ -5,6 +5,20 @@
     "context7@claude-plugins-official": true,
     "hookify@claude-plugins-official": true
   },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "ExitPlanMode",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/exit-plan-mode-guard.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
   "language": "korean",
   "effortLevel": "high"
 }

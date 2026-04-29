@@ -17,12 +17,6 @@
 - Pattern: `test_<what>_<condition>_<expected_result>`
 - Structure: Arrange -> Act -> Assert
 
-## Separation of Concerns
-- **API/Routes**: HTTP concerns, validation, serialization
-- **Service**: Business logic, orchestration
-- **Repository**: Data access, queries
-- **Models**: Data structures, domain entities
-
 ## Code Quality
 - One function = one responsibility
 - Minimize side effects, prefer pure functions

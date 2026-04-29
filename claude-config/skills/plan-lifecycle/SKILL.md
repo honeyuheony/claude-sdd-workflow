@@ -36,19 +36,39 @@ user-invocable: false
 
 ## 메타데이터 형식
 
+### master plan (specs/NNN-feature/plan.md — 4-Part 본질·진행 추적)
+
 ```yaml
 ---
+type: master-plan
 feature: NNN-feature-name
 status: Draft | In-Progress | Done
+tier: Standard                         # 또는 Quick
 created: YYYY-MM-DD
+parts_reviewed: []                     # 사이클 승인 시마다 [1], [1,2], [1,2,3,4] 누적
 current_phase: N
 current_step: N
 branch: branch-name
+target_save_path: <project>/specs/NNN-feature/plan.md   # ExitPlanMode 후 이동 경로
+steering: [product, tech, structure]   # 옵션. steering-load skill이 로드한 _steering/ 파일 목록 (없으면 생략)
+---
+```
+
+### 임시 plan (`~/.claude/plans/<random>-cycle-N.md` — 매 사이클 ExitPlanMode hook 통과용 메타 파일)
+
+```yaml
+---
+type: meta-progress
+tier: Standard            # 본질 그대로 (Quick 거짓 표기 금지)
+parts_reviewed: []        # 임시 plan은 항상 []
+master_plan_path: <master 절대 경로>
+cycle: 1                  # 1, 2, 3 — 첫 사이클(cycle: 1)은 hook 부트스트랩 예외 대상
 ---
 ```
 
 > `Status` 필드는 `Draft → In-Progress → Done`으로 추적.
 > end-session에서 Part 3 체크리스트 기반으로 동기화.
+> 사이클 운영 절차 상세: `~/.claude/skills/standard-plan-mode/SKILL.md` 참조.
 
 ## 작성 시점
 
@@ -63,12 +83,20 @@ branch: branch-name
 
 ## Failure/Success Documentation
 
+> **Auto Dream 활성화 상태**: 메모리 정리는 Auto Dream이 담당.
+> 기록은 간결하게 하고, 일회성/프로젝트 종속 패턴은 기록하지 않는다.
+
 ### Failure — When to Record
 
-아래 상황에서 실패를 기록한다:
+아래 **모두** 충족 시에만 기록:
 - 3회 이상 시도 후 실패한 접근법
-- 예상과 다르게 동작한 코드/도구
-- 잘못된 가정으로 인한 재작업
+- **다른 프로젝트에서도 재발 가능한** 범용 패턴
+- 코드 수정만으로 방지할 수 없는 판단/사고방식 오류
+
+기록하지 않는 것:
+- 일회성 환경 설정 문제 (이미 코드에 반영)
+- 특정 외부 API/도구의 quirk (해당 코드에 주석으로 충분)
+- CLAUDE.md 규칙 위반 (규칙 자체가 방지 역할)
 
 ### Success — When to Record
 
@@ -81,14 +109,26 @@ branch: branch-name
 
 | 범위 | Failure 경로 | Success 경로 |
 |------|------------|-------------|
-| 프로젝트 한정 | `.agent/docs/failures.md` | `.agent/docs/successes.md` |
 | 크로스 프로젝트 | `~/.claude/projects/{project}/memory/failure-patterns.md` | `~/.claude/projects/{project}/memory/success-patterns.md` |
 
 파일이 없으면 기록 시점에 생성 (미리 만들지 않음).
 
+### 기록 형식
+
+간결한 형식 사용 (Auto Dream이 정리하기 쉽도록):
+
+```markdown
+### {제목}
+- {교훈 1줄}
+- **Why:** {근본 원인 1줄}
+```
+
+상세 Failure Log Template(Date, Attempted, Expected, Actual 등)은 **session-log.md에 기록**하고,
+failure-patterns.md에는 교훈만 남긴다.
+
 ### Integration
 
-- **3-failure rule** (01-principles.md Debugging): 3회 실패 → oracle-consultation + Failure Log Template으로 기록
+- **3-failure rule** (01-principles.md Debugging): 3회 실패 → oracle-consultation + session-log에 상세 기록 + failure-patterns에 교훈
 - **start-session**: Explore Agent가 memory/ 디렉토리에서 failure-patterns.md, success-patterns.md 확인
 - **end-session**: 학습 추출 단계에서 success-patterns.md 업데이트
 

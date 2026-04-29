@@ -1,15 +1,20 @@
 # Document Templates
 
-## plan.md 4-Part 템플릿
+## plan.md 4-Part 템플릿 (master plan)
 
 ```markdown
 ---
+type: master-plan
 feature: NNN-feature-name
 status: Draft
+tier: Standard                         # 또는 Quick
 created: YYYY-MM-DD
+parts_reviewed: []                     # 사이클 승인마다 [1], [1,2], [1,2,3,4] 누적
 current_phase: 0
 current_step: 0
 branch: ""
+target_save_path: <project>/specs/NNN-feature/plan.md   # ExitPlanMode 후 이동 경로
+steering: []   # 옵션. steering-load skill이 로드한 _steering/ 파일 목록 (예: [product, tech])
 ---
 
 # {Feature Name}
@@ -28,10 +33,25 @@ branch: ""
 
 ### Acceptance Criteria
 
-#### AC-01: {제목}
+조건/동작 형식 (권장) 또는 Given/When/Then 형식. 둘 다 또는 혼용 가능.
+
+#### AC-01: {제목} — 조건/동작 형식
+- **WHEN** {조건/이벤트} / **THE SYSTEM SHALL** {기대 동작}
+
+#### AC-02: {제목} — Given/When/Then 형식
 - **Given**: {전제 조건}
 - **When**: {동작}
 - **Then**: {기대 결과}
+
+### Acceptance Criteria — 실행 경로 (옵션, 자율 작업 단위가 큰 Standard에서 권장)
+
+agent loop 경로 자체에 대한 합격 조건. final-output AC와 별개:
+
+- 도구 호출 횟수 ≤ {N}
+- 동일 파일 편집 횟수 ≤ {M}
+- 금지 도구 0회: {목록 — 예: git push, rm -rf, 패키지 install}
+- 필수 검증 step: {예: pytest 1회 이상}
+- 사용자 승인 게이트: {자율성 등급별}
 
 ## Part 2: Technical Design
 
@@ -74,6 +94,30 @@ branch: ""
 
 ---
 
+## 임시 plan 템플릿 (사이클별, hook 통과용 메타 파일)
+
+매 사이클(1, 2, 3) ExitPlanMode 직전에 `~/.claude/plans/<random>-cycle-N.md`로 생성:
+
+```markdown
+---
+type: meta-progress
+tier: Standard            # 본질 그대로 (Quick 거짓 표기 금지)
+parts_reviewed: []        # 임시 plan은 항상 []
+master_plan_path: <master 절대 경로>
+cycle: 1                  # 1, 2, 3
+---
+
+# 사이클 N — {Part N 또는 Part 3+4 통합}
+
+해당 사이클의 본문(Part 1 / Part 2 / Part 3+4)을 작성.
+사이클 종료 시 본문을 master plan으로 sync 후 master `parts_reviewed`에 Part 번호 추가.
+```
+
+> 사이클 1(`cycle: 1`)은 master `parts_reviewed`가 비어 있어도 hook 통과(부트스트랩 예외).
+> 사이클 2 이상에서 `cycle: 1` 거짓 표기는 본질 거짓 표기 안티패턴.
+
+---
+
 ## session-log.md 형식
 
 ```markdown
@@ -96,7 +140,9 @@ branch: ""
 
 ---
 
-## Failure Log Template
+## Failure Log Template (session-log용 상세)
+
+session-log.md 발견사항 섹션에 상세 기록:
 
 ```markdown
 ### Failure: {title}
@@ -106,6 +152,14 @@ branch: ""
 - **Actual**: 실제 결과
 - **Root Cause**: 실패 원인
 - **Lesson**: 재사용 가능한 통찰
+```
+
+failure-patterns.md에는 교훈만 간결하게:
+
+```markdown
+### {title}
+- {교훈 1줄}
+- **Why:** {근본 원인 1줄}
 ```
 
 ---

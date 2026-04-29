@@ -36,20 +36,39 @@ user-invocable: false
 
 ## 메타데이터 형식
 
+### master plan (specs/NNN-feature/plan.md — 4-Part 본질·진행 추적)
+
 ```yaml
 ---
+type: master-plan
 feature: NNN-feature-name
 status: Draft | In-Progress | Done
+tier: Standard                         # 또는 Quick
 created: YYYY-MM-DD
+parts_reviewed: []                     # 사이클 승인 시마다 [1], [1,2], [1,2,3,4] 누적
 current_phase: N
 current_step: N
 branch: branch-name
+target_save_path: <project>/specs/NNN-feature/plan.md   # ExitPlanMode 후 이동 경로
 steering: [product, tech, structure]   # 옵션. steering-load skill이 로드한 _steering/ 파일 목록 (없으면 생략)
+---
+```
+
+### 임시 plan (`~/.claude/plans/<random>-cycle-N.md` — 매 사이클 ExitPlanMode hook 통과용 메타 파일)
+
+```yaml
+---
+type: meta-progress
+tier: Standard            # 본질 그대로 (Quick 거짓 표기 금지)
+parts_reviewed: []        # 임시 plan은 항상 []
+master_plan_path: <master 절대 경로>
+cycle: 1                  # 1, 2, 3 — 첫 사이클(cycle: 1)은 hook 부트스트랩 예외 대상
 ---
 ```
 
 > `Status` 필드는 `Draft → In-Progress → Done`으로 추적.
 > end-session에서 Part 3 체크리스트 기반으로 동기화.
+> 사이클 운영 절차 상세: `~/.claude/skills/standard-plan-mode/SKILL.md` 참조.
 
 ## 작성 시점
 

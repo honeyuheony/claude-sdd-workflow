@@ -10,8 +10,8 @@
 2. 구조적/동작적 변경 분리 (Tidy First)
 3. 테스트 통과 후에만 커밋
 4. 응답은 한국어 (코드 식별자, 경로, 명령어 제외)
-5. 기본은 Edit Mode, 설계 필요 시 Plan Mode (03-integration.md 참조)
-6. 산출물 작성 시 03-integration.md 역할 분담 참조
+5. 기본은 Edit Mode, 설계 필요 시 Plan Mode (04-integration.md 참조)
+6. 산출물 작성 시 04-integration.md 역할 분담 참조
 
 ---
 

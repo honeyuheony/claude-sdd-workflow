@@ -159,6 +159,10 @@ fi
 mkdir -p ~/.claude/rules ~/.claude/skills ~/.claude/commands \
          ~/.claude/scripts ~/.claude/hooks
 
+# 기존 사용자: rules/ 이름이 변경됐으므로 옛 파일 정리
+# (02-coding → 03-coding, 03-integration → 04-integration로 리네임됨)
+rm -f ~/.claude/rules/02-coding.md ~/.claude/rules/03-integration.md
+
 # CLAUDE.md (메인 지침)
 cp claude-config/CLAUDE.md ~/.claude/CLAUDE.md
 

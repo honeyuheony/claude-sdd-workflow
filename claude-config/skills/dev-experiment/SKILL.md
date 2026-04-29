@@ -58,7 +58,7 @@ Quick-Standard 사이 gap을 메우는 짧은 가설 검증.
 ```
 ## Experiment Result: {가설 제목}
 - **가설**: {1문장}
-- **결과**: Pass / Fail
+- **결과**: ✅ Pass / ❌ Fail
 - **근거**: {테스트 결과 요약}
 - **다음 행동**: {Standard 진행 / 다른 접근 시도 / 포기}
 ```

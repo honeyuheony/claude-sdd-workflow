@@ -10,6 +10,7 @@ created: YYYY-MM-DD
 current_phase: 0
 current_step: 0
 branch: ""
+steering: []   # 옵션. steering-load skill이 로드한 _steering/ 파일 목록 (예: [product, tech])
 ---
 
 # {Feature Name}
@@ -28,10 +29,25 @@ branch: ""
 
 ### Acceptance Criteria
 
-#### AC-01: {제목}
+조건/동작 형식 (권장) 또는 Given/When/Then 형식. 둘 다 또는 혼용 가능.
+
+#### AC-01: {제목} — 조건/동작 형식
+- **WHEN** {조건/이벤트} / **THE SYSTEM SHALL** {기대 동작}
+
+#### AC-02: {제목} — Given/When/Then 형식
 - **Given**: {전제 조건}
 - **When**: {동작}
 - **Then**: {기대 결과}
+
+### Acceptance Criteria — 실행 경로 (옵션, 자율 작업 단위가 큰 Standard에서 권장)
+
+agent loop 경로 자체에 대한 합격 조건. final-output AC와 별개:
+
+- 도구 호출 횟수 ≤ {N}
+- 동일 파일 편집 횟수 ≤ {M}
+- 금지 도구 0회: {목록 — 예: git push, rm -rf, 패키지 install}
+- 필수 검증 step: {예: pytest 1회 이상}
+- 사용자 승인 게이트: {자율성 등급별}
 
 ## Part 2: Technical Design
 
@@ -96,7 +112,9 @@ branch: ""
 
 ---
 
-## Failure Log Template
+## Failure Log Template (session-log용 상세)
+
+session-log.md 발견사항 섹션에 상세 기록:
 
 ```markdown
 ### Failure: {title}
@@ -106,6 +124,14 @@ branch: ""
 - **Actual**: 실제 결과
 - **Root Cause**: 실패 원인
 - **Lesson**: 재사용 가능한 통찰
+```
+
+failure-patterns.md에는 교훈만 간결하게:
+
+```markdown
+### {title}
+- {교훈 1줄}
+- **Why:** {근본 원인 1줄}
 ```
 
 ---

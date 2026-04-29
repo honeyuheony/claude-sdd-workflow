@@ -2,10 +2,20 @@
 
 ## 모드
 
-**기본은 Edit Mode. 설계가 필요하면 Plan Mode.**
+**기본은 Edit Mode. 질문형은 Answer Mode, 설계가 필요하면 Plan Mode.**
 
+- Answer Mode: 질문·탐색 — 읽기 도구만, 상태 변경(Edit/Write/git 변경/MCP write) 금지
 - Plan Mode: 설계 탐색 및 계획 구조화 (Standard 필수, Quick 선택)
 - Edit Mode: 구현, 디버깅, 검증, 코드 리뷰
+
+### 모드 판별
+
+| 신호 | 모드 |
+|------|------|
+| `?`, `~까?`, `~할까`, `~해볼까`, `어때`, `어떻게`, `왜`, `can/should/how/why` | Answer Mode |
+| 명령 동사: `만들어`, `수정해`, `추가해`, `실행해`, `삭제해`, `고쳐` | Edit Mode |
+| 다중 파일 변경·아키텍처 결정 필요 | Plan Mode |
+| 애매 | Answer Mode 시작 → 제안 → 사용자 승인 후 Edit |
 
 ## 용어
 
@@ -63,10 +73,15 @@ Phase 2: superpowers:brainstorming
   - 인터랙티브 설계 탐색 + 접근법 결정
   ↓
 Phase 3: Plan Mode 진입
-  - brainstorming 결과를 4-Part 구조로 정리 (아래 참조)
-  - git repo 내: /ultraplan 사용 가능 → 브라우저 팀 리뷰
-  - git repo 외: 터미널에서 직접 승인
-  → ExitPlanMode → specs/NNN-{feature}/plan.md로 즉시 저장
+  - **standard-plan-mode skill 로드 (필수)** — 사이클 단위 진행 절차 강제
+  - brainstorming 결과를 4-Part 구조로 정리. 리뷰 단위는 [Part 1] / [Part 2] / [Part 3+4 통합] 3사이클
+  - plannotator-annotate가 시스템 Plan Mode 안에서 차단되므로 매 사이클마다 ExitPlanMode → plannotator → EnterPlanMode 사이클 운영
+  - 각 사이클: 임시 plan(`master_plan_path` 명시) 작성 → ExitPlanMode → plannotator-annotate 리뷰 → 사용자 승인(피드백 시 Pre-Edit Checklist 5문항 적용) → 임시 plan 변경분을 master로 sync → master frontmatter parts_reviewed에 Part 번호 추가 → EnterPlanMode 재진입
+  - 사이클 3 진입 직후 분리 회귀 트리거(태스크 ≥15 / 위험 ≥8 / 글로벌·보안·외부 API 의존)를 판정. 트리거 발동 시 [Part 3 단독] / [Part 4 단독] 2사이클로 회귀
+  - master parts_reviewed: [1,2,3,4] 모두 충족된 마지막 ExitPlanMode → master plan을 specs/NNN-{feature}/plan.md로 즉시 저장 (PreToolUse hook이 검증/차단)
+  - 추가 리뷰 옵션:
+    - /ultraplan (git repo 내, 가용 시) → 브라우저 팀 리뷰
+    - 터미널 직접 승인 (소규모 작업)
   ↓
 [구현 준비]
 Phase 4: 브랜치 + 워크트리 생성
@@ -88,6 +103,12 @@ Phase 6: 최종 품질 + 검증
   - superpowers:verification-before-completion — plan.md Part 1 AC 기반 최종 검증
   - superpowers:finishing-a-development-branch — merge/PR/cleanup 결정
   → Commit
+  ↓
+Phase 6.5: Reflect
+  - 잘된 것 → success-patterns.md 후보
+  - 개선할 것 → failure-patterns.md 후보
+  - 다음 작업에 가져갈 것 → active_context.md "다음 단계" 갱신
+  → end-session skill의 Reflect 수집 단계와 1:1 매핑 (자동 기록 X, 사용자 명시 후 append)
 ```
 
 ### brainstorming과 Plan Mode의 관계
@@ -138,7 +159,9 @@ Standard Plan Mode에서 작성하는 계획은 다음 구조를 따른다:
 Part 1: Context & Requirements (brainstorming 결과 정형화)
   - 문제 정의 (Problem Statement)
   - 범위: In-Scope / Out-of-Scope
-  - Acceptance Criteria (Given/When/Then)
+  - Acceptance Criteria (조건/동작 형식 권장: WHEN [조건] / THE SYSTEM SHALL [동작]; Given/When/Then 호환)
+  - Acceptance Criteria — 실행 경로 (Part 1 부속, 옵션, 자율 작업 단위가 큰 Standard에서 권장):
+    도구 호출 횟수 상한 / 동일 파일 편집 횟수 상한 / 금지 도구 / 필수 검증 step / 사용자 승인 게이트
 
 Part 2: Technical Design (기술 설계)
   - 영향 파일/모듈 목록
@@ -154,6 +177,18 @@ Part 4: Risks & Verification (위험/검증)
   - 기술적 위험 요소
   - 검증 기준 (어떻게 동작을 확인하는가)
 ```
+
+**사이클별 진행 의무 (Standard, standard-plan-mode skill 참조)**:
+- 리뷰 사이클 단위: [Part 1] / [Part 2] / [Part 3+4 통합] 총 3사이클
+- 매 사이클: 임시 plan(`master_plan_path` 명시) 작성 → ExitPlanMode → plannotator-annotate 호출 → 피드백 수신 시 Pre-Edit Checklist 5문항 적용 → 사용자 승인 → 임시 plan 변경분을 master로 sync → master frontmatter `parts_reviewed`에 Part 번호 추가 → EnterPlanMode 재진입
+- 사이클 3 통합 승인 시 `parts_reviewed`에 [3, 4] 동시 추가. 분리 회귀 트리거 발동 시는 [Part 3] / [Part 4] 두 사이클로 분리
+- master `parts_reviewed: [1, 2, 3, 4]` 상태에서 마지막 ExitPlanMode 호출 → master plan을 specs로 저장
+- PreToolUse hook(`~/.claude/hooks/exit-plan-mode-guard.sh`)이 매 ExitPlanMode 시점에 frontmatter 검증 (master_plan_path 분기로 사이클 운영 통과)
+- Quick tier(1~2 파일, 한 문장 요건)는 plan.md frontmatter에 `tier: Quick` 명시로 hook 우회
+
+**피드백 받았을 때의 본질 재정렬 원칙**:
+- 코멘트 단위 patch만 붙이지 말 것. 피드백이 상위 가정을 깨면 영향 받는 Part 전체 재정렬
+- standard-plan-mode skill의 Pre-Edit Checklist 5문항으로 매 라운드 자가 점검
 
 ---
 
@@ -187,8 +222,11 @@ Plan Mode 컨텍스트는 대화 종료 시 소멸하므로 반드시 즉시 저
 | 단계 | 도구 | 역할 |
 |------|------|------|
 | 요구사항 탐색 | superpowers:brainstorming | 인터랙티브 설계 탐색 |
+| Standard 절차 강제 | standard-plan-mode | 사이클 단위 진행 (Part 1 / Part 2 / Part 3+4) + Pre-Edit Checklist + master frontmatter parts_reviewed 추적 |
 | 구조화 | Plan Mode | brainstorming 결과 → 4-Part 계획 |
-| 리뷰 | Ultraplan / 터미널 | 팀 리뷰 또는 직접 승인 |
+| 사이클 리뷰 | plannotator-annotate | 매 사이클 ExitPlanMode 후 인터랙티브 리뷰 (Standard 필수, 총 3회) |
+| 통합 리뷰 (선택) | Ultraplan / 터미널 | 팀 리뷰 또는 직접 승인 |
+| 절차 강제 | PreToolUse hook (exit-plan-mode-guard.sh) | 매 ExitPlanMode 시 frontmatter 검증 (master_plan_path 분기로 사이클 운영 통과) |
 
 **구현 단계:**
 
@@ -227,11 +265,14 @@ Tier decision
 | 도구 | 역할 |
 |------|------|
 | **Plan Mode** | brainstorming 결과를 4-Part 구조로 정리 (Standard 필수, Quick 선택) |
+| **standard-plan-mode** | Standard tier 사이클 단위 진행(Part 1 / Part 2 / Part 3+4) + Pre-Edit Checklist 강제 (skill) |
+| **plannotator-annotate** | 사이클 단위 인터랙티브 리뷰 (Standard 매 사이클 1회, 총 3회 / Quick 선택) |
 | **Ultraplan** | Plan 리뷰를 브라우저로 확장 (git repo 내, 가용 시) |
 | **superpowers** | brainstorming, TDD, debugging, verification, code review, worktree, branch |
 | **/simplify** | 전체 구현 완료 후 코드 품질 최종 리뷰 |
 | **context7** | 라이브러리/프레임워크 문서 조회 |
 | **hookify** | 행동 방지 훅 생성/관리 |
+| **exit-plan-mode-guard hook** | ExitPlanMode 시 plan.md frontmatter parts_reviewed 검증 (~/.claude/hooks/) |
 
 ## 산출물 경로
 

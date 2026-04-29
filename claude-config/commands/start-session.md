@@ -77,3 +77,20 @@ plan.md 브랜치: {branch from frontmatter}
 
 불일치 시 경고:
 > "plan.md는 `{plan_branch}`를 가리키지만 현재 `{current_branch}`에 있습니다. 브랜치를 전환할까요?"
+
+## 1.8단계: active_context.md 복원
+
+진행 중 작업의 현재 상태를 단일 파일에서 빠르게 복원합니다:
+
+```
+project_memory_dir = ~/.claude/projects/<cwd-encoded>/memory/
+active_context_path = {project_memory_dir}/active_context.md
+```
+
+**파일이 존재하면**, 내용을 읽어 다음 3 섹션 표시:
+- **현재 초점**: 진행 중 plan / Phase / Step
+- **최근 변경**: 최근 의도 단위 변경 1~3건
+- **다음 단계**: 후속 작업 체크리스트
+
+**파일이 존재하지 않으면**:
+> "active_context.md가 없습니다. 신규 생성하시겠습니까? (자동 생성 X — 사용자 명시 후 작성)"

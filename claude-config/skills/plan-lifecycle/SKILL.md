@@ -44,6 +44,7 @@ created: YYYY-MM-DD
 current_phase: N
 current_step: N
 branch: branch-name
+steering: [product, tech, structure]   # 옵션. steering-load skill이 로드한 _steering/ 파일 목록 (없으면 생략)
 ---
 ```
 
@@ -63,12 +64,20 @@ branch: branch-name
 
 ## Failure/Success Documentation
 
+> **Auto Dream 활성화 상태**: 메모리 정리는 Auto Dream이 담당.
+> 기록은 간결하게 하고, 일회성/프로젝트 종속 패턴은 기록하지 않는다.
+
 ### Failure — When to Record
 
-아래 상황에서 실패를 기록한다:
+아래 **모두** 충족 시에만 기록:
 - 3회 이상 시도 후 실패한 접근법
-- 예상과 다르게 동작한 코드/도구
-- 잘못된 가정으로 인한 재작업
+- **다른 프로젝트에서도 재발 가능한** 범용 패턴
+- 코드 수정만으로 방지할 수 없는 판단/사고방식 오류
+
+기록하지 않는 것:
+- 일회성 환경 설정 문제 (이미 코드에 반영)
+- 특정 외부 API/도구의 quirk (해당 코드에 주석으로 충분)
+- CLAUDE.md 규칙 위반 (규칙 자체가 방지 역할)
 
 ### Success — When to Record
 
@@ -81,14 +90,26 @@ branch: branch-name
 
 | 범위 | Failure 경로 | Success 경로 |
 |------|------------|-------------|
-| 프로젝트 한정 | `.agent/docs/failures.md` | `.agent/docs/successes.md` |
 | 크로스 프로젝트 | `~/.claude/projects/{project}/memory/failure-patterns.md` | `~/.claude/projects/{project}/memory/success-patterns.md` |
 
 파일이 없으면 기록 시점에 생성 (미리 만들지 않음).
 
+### 기록 형식
+
+간결한 형식 사용 (Auto Dream이 정리하기 쉽도록):
+
+```markdown
+### {제목}
+- {교훈 1줄}
+- **Why:** {근본 원인 1줄}
+```
+
+상세 Failure Log Template(Date, Attempted, Expected, Actual 등)은 **session-log.md에 기록**하고,
+failure-patterns.md에는 교훈만 남긴다.
+
 ### Integration
 
-- **3-failure rule** (01-principles.md Debugging): 3회 실패 → oracle-consultation + Failure Log Template으로 기록
+- **3-failure rule** (01-principles.md Debugging): 3회 실패 → oracle-consultation + session-log에 상세 기록 + failure-patterns에 교훈
 - **start-session**: Explore Agent가 memory/ 디렉토리에서 failure-patterns.md, success-patterns.md 확인
 - **end-session**: 학습 추출 단계에서 success-patterns.md 업데이트
 

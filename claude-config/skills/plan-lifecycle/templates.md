@@ -15,6 +15,13 @@ current_step: 0
 branch: ""
 target_save_path: <project>/specs/NNN-feature/plan.md   # ExitPlanMode 후 이동 경로
 steering: []   # 옵션. steering-load skill이 로드한 _steering/ 파일 목록 (예: [product, tech])
+ambiguity_score: 0.0                   # ambiguity-check skill PASS 점수. skip 일 경우 "skip"
+ambiguity_dims: [0.0, 0.0, 0.0, 0.0]   # [D1 Goal, D2 Constraint, D3 AC, D4 Ontology] (소수점 1자리)
+ambiguity_check: pass                  # pass | warn-accepted | skip
+needs_clarification_count: 0           # plan.md 본문의 unresolved [NEEDS CLARIFICATION] 마커 수. 4 이상이면 차단
+clarifications: ""                     # "budget-override" 명시 시 3개 한도 우회. 비어 있으면 정상
+clarifications_override_reason: ""     # 우회 사유 1줄. budget-override 일 때 필수
+meta_bypass: false                     # true 면 ambiguity-check / clarifications hard-limit 적용 대상 외 (하네스 self-upgrade 한정)
 ---
 
 # {Feature Name}
@@ -52,6 +59,20 @@ agent loop 경로 자체에 대한 합격 조건. final-output AC와 별개:
 - 금지 도구 0회: {목록 — 예: git push, rm -rf, 패키지 install}
 - 필수 검증 step: {예: pytest 1회 이상}
 - 사용자 승인 게이트: {자율성 등급별}
+
+## Clarifications
+
+> 본문에 `[NEEDS CLARIFICATION: 질문 — 누구에게]` 마커로 표시한 항목을 ID 와 함께 누적. 운영 컨벤션 상세: `rules/05-clarifications.md`.
+> Open 4개 이상이면 hook / Plan Mode 진입 차단 (단 `clarifications: budget-override` 또는 `meta_bypass: true` frontmatter 시 우회).
+
+### Open
+- [ ] [Q1] {질문 1줄} — {사용자/오라클/팀}
+- [ ] [Q2] {질문 1줄} — {…}
+
+### Resolved
+- [x] [Q0] {질문 1줄} — 답변 출처 (YYYY-MM-DD)
+  - **결정**: {결정 내용 1줄}
+  - **근거**: {근거 1줄}
 
 ## Part 2: Technical Design
 

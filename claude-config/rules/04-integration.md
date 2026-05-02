@@ -71,6 +71,7 @@ Phase 1: Explore Agent(s) [1~3, parallel, Haiku]
   ↓
 Phase 2: superpowers:brainstorming
   - 인터랙티브 설계 탐색 + 접근법 결정
+  - **brainstorming 종료 직후 → ambiguity-check skill (자동, ≤0.2 게이트, skip 키워드 우회)**
   ↓
 Phase 3: Plan Mode 진입
   - **standard-plan-mode skill 로드 (필수)** — 사이클 단위 진행 절차 강제
@@ -93,14 +94,16 @@ Phase 4: 브랜치 + 워크트리 생성
 Phase 5: Edit Mode -- TDD 구현
   - superpowers:test-driven-development (Red -> Green -> Refactor)
   - superpowers:systematic-debugging (문제 발생 시)
+  - **loop-detector skill (디버깅 시 매 수정 직후 자동 — oscillation 감지 시 페르소나 추천)**
   - superpowers:dispatching-parallel-agents (독립 태스크 병렬 시)
-  - oracle-consultation (3-failure rule 또는 아키텍처 결정)
+  - oracle-consultation (3-failure rule 또는 아키텍처 결정 — 5 personas router: Contrarian/Hacker/Simplifier/Researcher/Architect)
   → Phase 완료 시 superpowers:requesting-code-review
   ↓
 [마무리]
 Phase 6: 최종 품질 + 검증
   - /simplify — 전체 변경 코드 품질 리뷰 (중복, 재사용, 효율)
   - superpowers:verification-before-completion — plan.md Part 1 AC 기반 최종 검증
+  - **verification-gate skill — 3-stage gate (Mechanical → Semantic → Consensus[placeholder]). superpowers 위에 의미 검증 layer**
   - superpowers:finishing-a-development-branch — merge/PR/cleanup 결정
   → Commit
   ↓
@@ -266,6 +269,10 @@ Tier decision
 |------|------|
 | **Plan Mode** | brainstorming 결과를 4-Part 구조로 정리 (Standard 필수, Quick 선택) |
 | **standard-plan-mode** | Standard tier 사이클 단위 진행(Part 1 / Part 2 / Part 3+4) + Pre-Edit Checklist 강제 (skill) |
+| **ambiguity-check** | brainstorming 종료 직후 4-dim 가중합 채점, ≤0.2 게이트 (Standard 자동, skip 키워드 우회) |
+| **verification-gate** | Phase 6 의 3-stage gate (Mechanical → Semantic → Consensus[placeholder]) |
+| **loop-detector** | 디버깅 중 직전·N-2 시도 diff hash 비교로 oscillation 감지 + 페르소나 추천 |
+| **oracle-consultation (+ 5 personas)** | 아키텍처/디버깅 상담 router. personas/{simplifier,hacker,contrarian,researcher,architect}.md |
 | **plannotator-annotate** | 사이클 단위 인터랙티브 리뷰 (Standard 매 사이클 1회, 총 3회 / Quick 선택) |
 | **Ultraplan** | Plan 리뷰를 브라우저로 확장 (git repo 내, 가용 시) |
 | **superpowers** | brainstorming, TDD, debugging, verification, code review, worktree, branch |
